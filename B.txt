@@ -1,0 +1,76 @@
+from PyQt5 import QtWidgets, QtGui, QtCore, uic
+import sys
+import random
+
+# Tolferda_Trapezia class
+class Tolferda_Trapezia:
+    def __init__(self, b_h):
+        self.base1 = b_h[0]
+        self.base2 = b_h[1]
+        self.height = b_h[2]
+    
+    def area(self):
+        return (self.base1 + self.base2) * self.height / 2
+
+# Random list generator
+def Shemtxveviti_Sia():
+    lists = []
+    for i in range(10):
+        list_1 = []
+        for j in range(3):
+            random_number = random.randint(1, 100)
+            list_1.append(random_number)
+        lists.append(list_1)
+    return lists
+
+# MainWindow class
+class MainWindow(QtWidgets.QWidget):
+    def __init__(self):
+        super().__init__()
+        
+        # Load the UI
+        uic.loadUi('form.ui', self)
+        
+        # Connect buttons
+        self.kvadratiButton.clicked.connect(self.show_kvadrati)
+        self.trapeciaButton.clicked.connect(self.show_trapecia_and_area)
+        self.clearButton.clicked.connect(self.clear_label)
+        
+        # Create a trapezoid object initially
+        random_data = random.choice(Shemtxveviti_Sia())
+        self.trapezoid = Tolferda_Trapezia(random_data)
+
+    def show_kvadrati(self):
+        pixmap = QtGui.QPixmap("Kvadrati.png")
+        if not pixmap.isNull():
+            self.imageLabel.setPixmap(pixmap)
+            self.imageLabel.setScaledContents(True)
+            self.areaLabel.setText("")  # Clear area text
+        else:
+            self.imageLabel.setText("Kvadrati.png not found")
+            self.areaLabel.setText("")
+
+    def show_trapecia_and_area(self):
+        # Create a new trapezoid
+        random_data = random.choice(Shemtxveviti_Sia())
+        self.trapezoid = Tolferda_Trapezia(random_data)
+        area = self.trapezoid.area()
+        
+        pixmap = QtGui.QPixmap("trapecia.png")
+        if not pixmap.isNull():
+            self.imageLabel.setPixmap(pixmap)
+            self.imageLabel.setScaledContents(True)
+            self.areaLabel.setText(f"ფართობი: {area:.2f}")
+        else:
+            self.imageLabel.setText("Trapecia.png not found")
+            self.areaLabel.setText(f"ფართობი: {area:.2f}")
+
+    def clear_label(self):
+        self.imageLabel.clear()
+        self.areaLabel.clear()
+
+# Start the application
+app = QtWidgets.QApplication(sys.argv)
+window = MainWindow()
+window.show()
+sys.exit(app.exec_())
